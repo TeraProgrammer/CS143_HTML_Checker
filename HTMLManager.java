@@ -19,10 +19,18 @@ public class HTMLManager {
          
          for (HTMLTag tag : tags) {
             if (tag.isOpening()) {
-               storage.add(tag);
-               tag.add(tag);
+               storage.push(tag);
+               tags.add(tag);
                tags.remove();
             } else if (tag.isClosing()) {
+               if (storage.peek().equals(tag.getMatching())) {
+                  queue.push(storage.pop());
+               } else {
+                  tags.remove();
+                  tags.add(tag.getMatching());
+                  storage.pop();
+               }
+            } else if (tag.isSelfOpening()) {
                
             }
          }
