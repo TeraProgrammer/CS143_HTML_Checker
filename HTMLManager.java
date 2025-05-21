@@ -15,23 +15,29 @@ public class HTMLManager {
      }
      
      public void fixHTML() {
-         Stack storage = new Stack<HTMLTag>;
+         Stack storage = new Stack<HTMLTag>();
+         int sizeQueue = tags.size();
          
-         for (HTMLTag tag : tags) {
+         for (int i = 0; i < sizeQueue; i++) {
+            HTMLTag tag = tags.remove();
             if (tag.isOpening()) {
                storage.push(tag);
                tags.add(tag);
                tags.remove();
             } else if (tag.isClosing()) {
                if (storage.peek().equals(tag.getMatching())) {
-                  queue.push(storage.pop());
+                  storage.pop();
+                  tags.add(tag);
+                  tags.remove();
                } else {
                   tags.remove();
                   tags.add(tag.getMatching());
                   storage.pop();
                }
-            } else if (tag.isSelfOpening()) {
-               
+            } else if (tag.isSelfClosing()) {
+               tags.add(tag);
+               tags.remove();
+               storage.pop();
             }
          }
      }
@@ -41,6 +47,11 @@ public class HTMLManager {
      }
      
      public String toString() {
-         return "";
+         StringBuilder stringTags = new StringBuilder();
+         for (HTMLTag tag : tags) {
+            stringTags.append(tag.toString().trim());
+         }
+         
+         return stringTags.toString();
      }  
 }
